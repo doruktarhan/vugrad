@@ -187,6 +187,25 @@ class Sigmoid(Op):
         sigx = context['sigx'] # retrieve the sigmoid of x
         return goutput * sigx * (1 - sigx)
 
+class ReLu(Op):
+    """
+    Op for element-wise application of sigmoid function
+    """
+
+    @staticmethod
+    def forward(context, input):
+        
+        relu = np.max(0,input) 
+        context['relu'] = relu # store the sigmoid of x for the backward pass
+        return relu
+
+    @staticmethod
+    def backward(context, goutput):
+        input = context['input']  # retrieve the relu of input
+        grad_relu = (input > 0).astype(input.dtype)
+        return goutput * grad_relu
+
+
 class Expand(Op):
     """
     Expand a singleton dimension in the input (that is, repeat the input a number of times along a given dimension of
